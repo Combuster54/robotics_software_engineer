@@ -23,4 +23,15 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
+include_directories(include)
+
+add_executable(task1  src/robot_class_main.cpp src/robot_class.cpp)
+add_executable(task2  src/sensors.cpp src/sensors_main.cpp)
+
+
+install(TARGETS
+  task1
+  task2
+DESTINATION lib/${PROJECT_NAME})
+
 ament_package()
