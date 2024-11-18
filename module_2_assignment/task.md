@@ -1,6 +1,17 @@
 # Module 2 Assignment: Developing Custom ROS 2 Nodes and Launch Files
 
-### How to clone && build the project
+## module_2_assignment package provided two set of patterns for turtles inside turtlesim
+
+- CirclePattern: Moves the turtle in a circular path using a radius input.
+- BackandForwardPattern: Moves the turtle in a back-and-forth motion using a linear velocity input.
+
+In addition, you can change those parameters dynamically using the command
+
+```sh
+ros2 param set <node_name> <parameter> <value>
+```
+
+## How to clone && build the project
 
 
 1. Clone the repository
