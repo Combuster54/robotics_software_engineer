@@ -1,12 +1,16 @@
 cmake_minimum_required(VERSION 3.8)
 project(module_2_assignment)
 
+
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(geometry_msgs REQUIRED)
+
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
@@ -22,5 +26,24 @@ if(BUILD_TESTING)
   set(ament_cmake_cpplint_FOUND TRUE)
   ament_lint_auto_find_test_dependencies()
 endif()
+
+include_directories(include)
+
+
+add_executable(circle_pattern  src/turtle_circle_pattern.cpp)
+ament_target_dependencies(circle_pattern rclcpp geometry_msgs)
+
+add_executable(backward_and_forward_pattern  src/back_and_forward_pattern.cpp)
+ament_target_dependencies(backward_and_forward_pattern rclcpp geometry_msgs)
+
+
+install(TARGETS
+  circle_pattern
+  backward_and_forward_pattern
+DESTINATION lib/${PROJECT_NAME})
+
+install(DIRECTORY
+  launch
+DESTINATION share/${PROJECT_NAME})
 
 ament_package()
