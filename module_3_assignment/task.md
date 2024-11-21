@@ -26,6 +26,16 @@ git switch assignments
 colcon build && source install/setup.bash
 ```
 
+## Explanation
+
+### 3DOF Arm Robot
+
+This robot has 3 degrees of freedom (DOF). Each revolute joint has a range of <-45,+45>
+
+### Ackerman Robot
+
+This robot has some similarities with convetional diff_drive robot, but here we add 2 additional links and joints to simulate the rotation movement. Each wheel has a range of <-45,+45>
+
 ## Execute Task 1 && Task 2
 
 ### Goals: Create a 3DOF Arm Robot
