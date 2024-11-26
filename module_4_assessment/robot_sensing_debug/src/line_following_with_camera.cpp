@@ -25,6 +25,8 @@ public:
 
 private:
   void cameraCallback(const sensor_msgs::msg::Image::SharedPtr cameraMsg) {
+    RCLCPP_INFO(this->get_logger(), "\n------ Callback -----\n");
+
     auto velocityMsg = geometry_msgs::msg::Twist();
     cv_bridge::CvImagePtr cvPtr;
     cvPtr = cv_bridge::toCvCopy(cameraMsg, "bgr8");

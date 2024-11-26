@@ -30,13 +30,13 @@ def generate_launch_description():
     pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
 
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
-    x_pose = LaunchConfiguration('x_pose', default='8.980152')
-    y_pose = LaunchConfiguration('y_pose', default='7.135622')
+    x_pose = LaunchConfiguration('x_pose', default='-4.402807') # redefine this values
+    y_pose = LaunchConfiguration('y_pose', default='-4.044180')  # redefine this values
 
     world = os.path.join(
         get_package_share_directory('robot_sensing'),
         'worlds',
-        'mazes.world'
+        'maze.world' # name_error: should be maze.world
     )
 
     gzserver_cmd = IncludeLaunchDescription(
@@ -70,7 +70,7 @@ def generate_launch_description():
     )
 
     maze_solver = Node(
-        package = 'robot_sensing',
+        package = 'robot_sensing_debug', # error_name: should be robot_sensing_debug
         name = 'maze_solvers',
         executable ='mazeSolving',
 
