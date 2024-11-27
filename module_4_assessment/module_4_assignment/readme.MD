@@ -1,5 +1,28 @@
 # Module 4 Assignment: Sensor Data Manipulation for Robot Control
 
+
+## How to clone && build the project
+
+
+1. Clone the repository
+
+```sh
+git clone https://github.com/Combuster54/robotics_software_engineer.git
+```
+
+2. Go into the repo and change into assignments branch
+
+```sh
+src robotics_software_engineer/
+git switch assignments
+```
+
+3. Get back to your workspace and compile 
+
+```sh
+colcon build && source install/setup.bash
+```
+
 ### Task 1: Restructure Line Following Project Code
 
 - You can see the new Line Folowing Project Code in line_following.hpp && line_following.cpp 
