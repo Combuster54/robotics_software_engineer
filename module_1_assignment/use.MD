@@ -27,8 +27,23 @@ colcon build && source install/setup.bash
 ros2 run module_1_assignment task1
 ```
 
+```sh
+combuster@DESKTOP-LMQHD5S:~/robotisim_ws$ ros2 run module_1_assignment task1
+The Robot AlphaBot is moving forward
+The Robot AlphaBot has been stopped
+The Robot BetaBot is moving backward
+The Robot BetaBot has been stopped
+```
+
 ## Run Task 2
 
-```
+```sh
 ros2 run module_2_assignment task2
+```
+
+
+```sh
+combuster@DESKTOP-LMQHD5S:~/robotisim_ws$ ros2 run module_1_assignment task2
+Temperature Sensor Reading: Sensor Data: 25.5
+Distance Sensor Reading: Sensor Data: 150
 ```
