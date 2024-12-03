@@ -18,7 +18,7 @@ WallFollower::WallFollower() : Node("wall_follower_node"), front_obstacle(0.0), 
     cmd_vel_pub_ = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);
 
     // Initialize subscriber for laser scan data
-    laser_scan_sub_ = this->create_subscription<sensor_msgs::msg::LaserScan>(
+    laser_scan_sub_ = this->create_subscription<scanMsg>(
         "scan", 10, std::bind(&WallFollower::scanCallback, this, _1));
 
     RCLCPP_INFO(this->get_logger(), "Wall follower is ready");
@@ -27,7 +27,7 @@ WallFollower::WallFollower() : Node("wall_follower_node"), front_obstacle(0.0), 
 /**
  * @brief Callback function for processing laser scan data.
  */
-void WallFollower::scanCallback(const sensor_msgs::msg::LaserScan::SharedPtr msg) {
+void WallFollower::scanCallback(const scanMsg::SharedPtr msg) {
     analyzeObstacles(msg);
     determineState();
     publishVelocity();
@@ -36,7 +36,7 @@ void WallFollower::scanCallback(const sensor_msgs::msg::LaserScan::SharedPtr msg
 /**
  * @brief Analyzes the distances to obstacles based on laser scan data.
  */
-void WallFollower::analyzeObstacles(const sensor_msgs::msg::LaserScan::SharedPtr msg) {
+void WallFollower::analyzeObstacles(const scanMsg::SharedPtr msg) {
     double front_distance_1 = *std::min_element(msg->ranges.begin() + 0, msg->ranges.begin() + 45);
     double front_distance_2 = *std::min_element(msg->ranges.begin() + 316, msg->ranges.begin() + 360);
     front_obstacle  = std::min(front_distance_1, front_distance_2);

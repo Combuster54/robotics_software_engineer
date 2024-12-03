@@ -7,6 +7,12 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(cv_bridge REQUIRED)
+find_package(OpenCV REQUIRED)
+
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
@@ -22,5 +28,24 @@ if(BUILD_TESTING)
   set(ament_cmake_cpplint_FOUND TRUE)
   ament_lint_auto_find_test_dependencies()
 endif()
+
+include_directories(include)
+
+add_executable(piController  src/line_following.cpp)
+ament_target_dependencies(piController rclcpp sensor_msgs geometry_msgs cv_bridge)
+target_link_libraries(piController ${OpenCV_LIBS})
+
+install(TARGETS
+  
+  piController
+
+DESTINATION lib/${PROJECT_NAME})
+
+install(DIRECTORY
+  launch
+  urdf
+  config
+  worlds
+DESTINATION share/${PROJECT_NAME})
 
 ament_package()

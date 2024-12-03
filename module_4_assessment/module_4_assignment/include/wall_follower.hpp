@@ -16,6 +16,8 @@
 #include <geometry_msgs/msg/twist.hpp>
 #include <algorithm>
 
+using scanMsg = sensor_msgs::msg::LaserScan;
+
 /**
  * @enum RobotState
  * @brief Represents the possible states of the robot during wall-following.
@@ -42,7 +44,7 @@ public:
 private:
     // ROS publishers and subscribers
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_pub_; ///< Publisher for velocity commands.
-    rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr laser_scan_sub_; ///< Subscriber for laser scan data.
+    rclcpp::Subscription<scanMsg>::SharedPtr laser_scan_sub_; ///< Subscriber for laser scan data.
 
     // Current command velocity
     geometry_msgs::msg::Twist cmd_vel_;
@@ -60,14 +62,14 @@ private:
      * Analyzes obstacles, determines the robot's state, and publishes velocity commands.
      * @param msg Shared pointer to the laser scan message.
      */
-    void scanCallback(const sensor_msgs::msg::LaserScan::SharedPtr msg);
+    void scanCallback(const scanMsg::SharedPtr msg);
 
     /**
      * @brief Analyzes the distances to obstacles based on laser scan data.
      * Extracts minimum distances for the front, right, and left sections.
      * @param msg Shared pointer to the laser scan message.
      */
-    void analyzeObstacles(const sensor_msgs::msg::LaserScan::SharedPtr msg);
+    void analyzeObstacles(const scanMsg::SharedPtr msg);
 
     /**
      * @brief Determines the robot's state based on obstacle distances.

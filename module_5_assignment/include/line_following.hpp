@@ -26,7 +26,7 @@
 // Type aliases for message types
 using CmdVel = geometry_msgs::msg::Twist;
 using imgMsg = sensor_msgs::msg::Image;
-usign scanMsg = 
+
 /**
  * @struct EdgeCountResult
  * @brief Structure for storing edge detection results.
@@ -66,6 +66,7 @@ private:
     int kernel_height_;     ///< Height of the dilation kernel
     int kernel_shape_;      ///< Shape of the dilation kernel
 
+    bool zero_edges= false; // Stop Turtlebot3 if there's any edge. Which means there's no mid_point
     // Edge detection counters
     EdgeCountResult edge_count_result_; ///< Edge detection results
 

@@ -12,6 +12,7 @@ find_package(sensor_msgs REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(Eigen3 REQUIRED)
+find_package(nav_msgs REQUIRED)
 
 # uncomment the following section in order to fill in
 # further dependencies manually.
@@ -20,7 +21,6 @@ find_package(Eigen3 REQUIRED)
 if(NOT Eigen3_FOUND)
   message(FATAL_ERROR "Eigen3 no encontrado. Asegúrate de que esté instalado correctamente.")
 endif()
-
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -34,7 +34,6 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-
 include_directories(include)
 
 add_executable(wallFollowing  src/wall_follower.cpp)
@@ -42,9 +41,8 @@ ament_target_dependencies(wallFollowing rclcpp sensor_msgs geometry_msgs)
 target_include_directories(wallFollowing PRIVATE ${EIGEN3_INCLUDE_DIR})
 
 add_executable(calculateVelAcc  src/imu.cpp)
-ament_target_dependencies(calculateVelAcc rclcpp sensor_msgs Eigen3)
+ament_target_dependencies(calculateVelAcc rclcpp sensor_msgs nav_msgs geometry_msgs Eigen3)
 target_include_directories(calculateVelAcc PRIVATE ${EIGEN3_INCLUDE_DIR})
-
 
 install(TARGETS
   wallFollowing
