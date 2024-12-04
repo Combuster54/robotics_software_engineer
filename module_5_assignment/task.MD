@@ -7,7 +7,7 @@
 Clone the repository
 
 ```
-git clone https://github.com/Combuster54/robotics_software_engineer.git
+git clone https://github.com/Combuster54/robotics_software_engineer.git -b asigment_5
 ```
 
 Go into the repo and change into assignments branch
@@ -77,7 +77,7 @@ ros2 topic pub /forward_position_controller/commands std_msgs/msg/Float64MultiAr
 - **Objective:** Enhance the multi-goal following behavior of TurtleBot3 using LQR and analyze the impact of different Q and R matrix values on the robot's path and performance.
 
 
-1. Run Turtlebot3 Simulation && Rviz2
+1. Run Turtlebot3 Simulation && Rviz2 && LQR node && Markers
 
 ```sh
 ros2 launch module_5_assignment tb3_empty.launch.py
@@ -90,43 +90,59 @@ ros2 launch module_5_assignment tb3_empty.launch.py
 ros2 bag record -o <file_name> /odom /tf /tf_static /imu /clock /visualization_marker_array /cmd_vel
 ```
 
-  - **Subtasks:**
+3. Run Bag Files
 
-    a. **Visualize Goals and Path in RViz:**
-       - Implement visualizations in RViz to display the positions of the goals and the robot’s path.
-       - Add markers for each goal and a trail of points to represent the robot's odometry during the path following.
+```sh
+ros2 bag play <bag_name>
+```
 
-    b. **Experiment with Different Q and R Values:**
-       - Test the LQR controller with three different sets of Q and R matrices.
-       - Record and compare how these values affect the robot's behavior, particularly in terms of stability, speed, and smoothness when transitioning between goals.
+# LQR Trajectory Analysis
+This document provides an analysis of different configurations for the Q and R matrices in the LQR (Linear Quadratic Regulator) and their impact on trajectory tracking performance.
 
-    c. **Document and Analyze the Results:**
-       - Provide a detailed report on the performance of the LQR controller with different Q and R settings.
-       - Include visualizations from RViz to illustrate the robot’s path and goal positions for each scenario.
-       - Discuss which set of Q and R values provided the best balance between responsiveness and smoothness in the robot’s motion.
+Overview
 
----
-### Submission Process
+The following trajectories were tested:
 
-1. **Create Files:**
-   - Navigate to the `module_5_assignment` package.
-   - Create the required files for the improved line-following, goal selection, and position control tasks.
+Green points: represent waypoints to guide the robot.
+Red line: represents the actual trajectory of the robot.
+Three configurations of Q (state cost) and R (control cost) matrices were tested. Below is a detailed analysis of the results.
 
-2. **Document Your Work:**
-   - Create a `README.md` file in the `module_5_assignment` package.
-   - Provide details about the files you created, including explanations of the code and the commands needed to run your simulations and controllers.
+1. First Set of 
 
-3. **Submit Your Assignment:**
-   - Push your changes to your forked repository.
-   - Provide your repository link in the assignment submission text area.
-   - **Note**: Ensure you press the "Start Assignment" button when you see the page (as it takes time to generate the pages).
 
-4. **Wait for Review:**
-   - Wait for the instructors to review your submission.
+Results:
 
-## Learning Outcome
+![First Configuration](doc/first_set_qr.jpg)
 
-By completing this assignment, you will:
-- Learn to control robots to create smoother and more efficient motion.
-- Enhance your understanding of using controllers and path planning algorithms to optimize robot behavior.
+- Balanced tracking with slight deviations.
+- The trajectory is smooth with minimal overshooting.
+- Suitable for general-purpose tasks.
 
+2. Second Set of 
+
+
+Results:
+
+-The trajectory closely follows the waypoints.
+- Exhibits oscillatory behavior due to aggressive control.
+- Suitable for scenarios requiring high accuracy but prone to instability.
+
+3. Third Set of 
+
+
+Results:
+
+- The trajectory prioritizes smoothness over accuracy.
+- Significant deviations from waypoints.
+- Suitable for energy conservation and smooth paths.
+- Comparative Analysis
+
+Table
+
+First Configuration: Provides a balanced trade-off between tracking accuracy and control effort.
+Suitable for general-purpose applications.
+
+Second Configuration: Focuses heavily on accuracy but results in oscillations. Not recommended for scenarios where stability is critical.
+
+
+Third Configuration: Prioritizes smoothness and minimal control effort but sacrifices accuracy.Ideal for applications prioritizing energy efficiency or smooth trajectories.
