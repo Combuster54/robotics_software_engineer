@@ -60,14 +60,35 @@ ros2 run module_5_assignment piController
 
 ### Task 3: Add a Position Controller to Robotic Arm URDF
 
-- **Extend the URDF model** of the robotic arm created in the previous module:
-  - Add a **position controller** to manage the arm's movements accurately.
-  - Ensure the URDF file is correctly configured to simulate the position control behavior in a ROS 2 environment.
-Based on your description, here's a proposed task for LQR with a focus on visualizing points in RViz and analyzing the effects of different Q and R values on the robot's behavior during multi-goal following:
+1. Run simulation && controller_manager
+
+```sh
+ros2 launch module_5_assignment gazebo_3dof_arm.launch.py 
+```
+
+2. Give angle for each joint
+
+```sh
+ros2 topic pub /forward_position_controller/commands std_msgs/msg/Float64MultiArray "data: [1.0, 0.5, -0.0]"
+```
 
 ### Task 4: Implement and Visualize LQR for Multi-Goal Following
 
 - **Objective:** Enhance the multi-goal following behavior of TurtleBot3 using LQR and analyze the impact of different Q and R matrix values on the robot's path and performance.
+
+
+1. Run Turtlebot3 Simulation && Rviz2
+
+```sh
+ros2 launch module_5_assignment tb3_empty.launch.py
+```
+
+
+2. How to make your own ros2 bag
+
+```sh
+ros2 bag record -o <file_name> /odom /tf /tf_static /imu /clock /visualization_marker_array /cmd_vel
+```
 
   - **Subtasks:**
 

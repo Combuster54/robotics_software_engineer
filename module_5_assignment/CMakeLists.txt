@@ -12,6 +12,11 @@ find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(OpenCV REQUIRED)
+find_package(visualization_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(Eigen3 REQUIRED)
+find_package(angles REQUIRED)
+find_package(tf2_ros REQUIRED)
 
 # uncomment the following section in order to fill in
 # further dependencies manually.
@@ -31,14 +36,28 @@ endif()
 
 include_directories(include)
 
+add_library(lqr_lib STATIC src/lqr_lib.cpp)
+target_include_directories(lqr_lib PRIVATE ${EIGEN_INCLUDE_DIR} include)
+target_link_libraries(lqr_lib Eigen3::Eigen)
+
 add_executable(piController  src/line_following.cpp)
 ament_target_dependencies(piController rclcpp sensor_msgs geometry_msgs cv_bridge)
 target_link_libraries(piController ${OpenCV_LIBS})
 
-install(TARGETS
-  
-  piController
+# Añade el ejecutable y vincula la biblioteca
+add_executable(lqr_node src/lqr_node.cpp)
+target_link_libraries(lqr_node Eigen3::Eigen lqr_lib)
+ament_target_dependencies(lqr_node rclcpp tf2_ros geometry_msgs nav_msgs angles)
+target_include_directories(lqr_node PRIVATE ${EIGEN_INCLUDE_DIR} include)
 
+
+add_executable(marker_pub  src/marker.cpp)
+ament_target_dependencies(marker_pub rclcpp nav_msgs visualization_msgs)
+
+install(TARGETS
+  lqr_node
+  piController
+  marker_pub
 DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY
@@ -46,6 +65,8 @@ install(DIRECTORY
   urdf
   config
   worlds
+  bag_files
+  rviz
 DESTINATION share/${PROJECT_NAME})
 
 ament_package()

@@ -82,3 +82,6 @@ def generate_launch_description():
         spawn_3dof_arm,
         controller_manager_node
     ])
+
+
+# ros2 topic pub /forward_position_controller/commands std_msgs/msg/Float64MultiArray "data: [1.0, 0.5, -0.3]"

@@ -33,7 +33,7 @@ def generate_launch_description():
     y_pose = LaunchConfiguration('y_pose', default='2.07')
 
     world = os.path.join(
-        get_package_share_directory('robot_sensing'),
+        get_package_share_directory('module_5_assignment'),
         'worlds',
         'line_following.world'
     )
@@ -69,7 +69,7 @@ def generate_launch_description():
     )
 
     image_processing = Node(
-        package='robot_sensing',
+        package='module_5_assignment',
         name='image_processing',
         executable='pointFollowing',
     )
