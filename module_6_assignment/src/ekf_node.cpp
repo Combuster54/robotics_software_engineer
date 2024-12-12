@@ -9,6 +9,7 @@
 #include <sensor_msgs/msg/nav_sat_fix.hpp>
 #include <visualization_msgs/msg/marker.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
+#include <geometry_msgs/msg/point.hpp>
 
 // Own libraries
 #include "ekf_lib.hpp"
@@ -26,7 +27,9 @@ using fixMsg = sensor_msgs::msg::NavSatFix;
 using namespace GPSUtils;
 
 class ExtendedKalmanFilter_Node : public rclcpp::Node {
+
 public:
+
     ExtendedKalmanFilter_Node() : Node("ekf_node") {
         setMatrices();
 
@@ -46,8 +49,9 @@ public:
         // IMU Subscription
         rclcpp::SubscriptionOptions imu_options;
         imu_options.callback_group = imu_callback_group_;
-        imuSub = this->create_subscription<sensor_msgs::msg::Imu>("imu", 10, std::bind(&ExtendedKalmanFilter_Node::imuCallback, this, std::placeholders::_1), imu_options);
+        imu_sub_ = this->create_subscription<sensor_msgs::msg::Imu>("imu", 10, std::bind(&ExtendedKalmanFilter_Node::imuCallback, this, std::placeholders::_1), imu_options);
 
+        fusion_pub_ = this->create_publisher<geometry_msgs::msg::Point>("ekf_pose", 10);
         RCLCPP_INFO(this->get_logger(), "Node initialized and ready.");
     }
 
@@ -61,9 +65,11 @@ private:
         RCLCPP_INFO(this->get_logger(), "--------> Starting EKF Iterations ");
 
         ekf.predict();
+        RCLCPP_INFO(this->get_logger(), "Fusion state published: x = %f, y = %f", fusion_msg.x, fusion_msg.y);
+
         RCLCPP_INFO(this->get_logger(), "Prediction step completed. State and covariance matrices have been predicted.");
 
-        measurements << fusion_point.x, fusion_point.y,
+        measurements << gps_msg.x, gps_msg.y,
                        imu_msg->linear_acceleration.x, imu_msg->angular_velocity.z;
                        
         RCLCPP_INFO(this->get_logger(), "Measurements obtained from sensors: x = %f, y = %f, ax = %f, az = %f",
@@ -113,16 +119,16 @@ private:
         GPSUtils::ECEF ecef_data = GPSUtils::gpsToECEF(gps_data);
         GPSUtils::ENU enu_data = GPSUtils::ecefToENU(ecef_data, ref_ecef_, ref_gps_);
 
-        auto enu_msg = geometry_msgs::msg::Point();
-        enu_msg.x = -1 * enu_data.east;
-        enu_msg.y = -1 * enu_data.north;
-        enu_msg.z = enu_data.up;
-
-        fusion_point.x = enu_msg.x;
-        fusion_point.y = enu_msg.y;
+        gps_msg.x = -1 * enu_data.east;
+        gps_msg.y = -1 * enu_data.north;
 
         estimation();
-        RCLCPP_INFO(this->get_logger(), "ENU -> East: %.2f, North: %.2f, Up: %.2f", enu_msg.x, enu_msg.y, enu_msg.z);
+        RCLCPP_INFO(this->get_logger(), "ENU -> East: %.2f, North: %.2f, Up: %.2f", gps_msg.x, gps_msg.y, enu_data.up);
+        fusion_msg.x = ekf.x_pred_[0];
+        fusion_msg.y = ekf.x_pred_[1];
+        fusion_msg.z = ekf.x_pred_[4];
+
+        fusion_pub_->publish(fusion_msg);
     }
 
     Vector5d x_in;
@@ -139,18 +145,20 @@ private:
 
     ExtendedKalmanFilter ekf;
 
-    rclcpp::Subscription<fixMsg>::SharedPtr gps_sub_;
     GPSUtils::GPSData ref_gps_;
     GPSUtils::ECEF ref_ecef_;
 
     sensor_msgs::msg::Imu::SharedPtr imu_msg;
-    geometry_msgs::msg::Point fusion_point;
+    geometry_msgs::msg::Point gps_msg;
+    geometry_msgs::msg::Point fusion_msg;
 
     rclcpp::CallbackGroup::SharedPtr gps_callback_group_;
     rclcpp::CallbackGroup::SharedPtr imu_callback_group_;
 
-    rclcpp::Subscription<visualization_msgs::msg::MarkerArray>::SharedPtr markerArraySub;
-    rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr imuSub;
+    rclcpp::Publisher<geometry_msgs::msg::Point>::SharedPtr fusion_pub_;
+    rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr imu_sub_;
+    rclcpp::Subscription<fixMsg>::SharedPtr gps_sub_;
+
 };
 
 int main(int argc, char* argv[]) {

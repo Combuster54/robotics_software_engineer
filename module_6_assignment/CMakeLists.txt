@@ -13,6 +13,8 @@ find_package(visualization_msgs REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_ros REQUIRED)
 
 # uncomment the following section in order to fill in
 # further dependencies manually.
@@ -46,13 +48,16 @@ ament_target_dependencies(ekf_node rclcpp nav_msgs visualization_msgs sensor_msg
 target_include_directories(ekf_node PRIVATE ${EIGEN3_INCLUDE_DIR})
 target_link_libraries(ekf_node Eigen3::Eigen ekf_lib)
 
-
 add_executable(gps_sub src/gps_sub.cpp ${SOURCES})
 ament_target_dependencies(gps_sub rclcpp nav_msgs sensor_msgs geometry_msgs)
+
+add_executable(marker_pub src/marker.cpp ${SOURCES})
+ament_target_dependencies(marker_pub rclcpp nav_msgs sensor_msgs visualization_msgs geometry_msgs tf2_ros tf2)
 
 install(TARGETS
   ekf_node
   gps_sub
+  marker_pub
   DESTINATION lib/${PROJECT_NAME}
 )
 
