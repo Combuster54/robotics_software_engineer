@@ -96,13 +96,19 @@ private:
         // Measurement Matrix
         H_in.setZero();
         // Measurement Noise Covariance Matrix
-        R_in.setZero();
+        // R_in.setZero();
+
+        R_in << 1530.2, 0, 0, 0,
+                0, 1530.2, 0, 0,
+                0, 0, 1530.2, 0,
+                0, 0, 0, 1530.2;
+
         // Process Noise Covariance Matrix
-        Q_in << 0.1, 0, 0, 0, 0,
-                0, 0.1, 0, 0, 0,
-                0, 0, 0.1, 0, 0,
-                0, 0, 0, 0.1, 0,
-                0, 0, 0, 0, 0.1;
+        Q_in << 1000.0, 0, 0, 0, 0,
+                0, 1000.0, 0, 0, 0,
+                0, 0, 1000.0, 0, 0,
+                0, 0, 0, 1000.0, 0,
+                0, 0, 0, 0, 1000.0;
 
         ekf.dt = 0.1;
 
@@ -118,6 +124,9 @@ private:
         GPSUtils::GPSData gps_data = {msg->latitude, msg->longitude, msg->altitude};
         GPSUtils::ECEF ecef_data = GPSUtils::gpsToECEF(gps_data);
         GPSUtils::ENU enu_data = GPSUtils::ecefToENU(ecef_data, ref_ecef_, ref_gps_);
+
+        // std::cout << "R Matrix:\n" << R_in << std::endl;
+        // std::cout << "Q Matrix:\n" << Q_in << std::endl;
 
         gps_msg.x = -1 * enu_data.east;
         gps_msg.y = -1 * enu_data.north;

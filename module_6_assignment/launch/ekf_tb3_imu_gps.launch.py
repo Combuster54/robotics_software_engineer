@@ -16,12 +16,12 @@ def generate_launch_description():
         output='screen',
     )
 
-    marker_node = Node(
-        package='module_6_assignment',
-        executable='marker_pub',
-        name='marker_pub_node',
-        output='screen',
-    )
+    # marker_node = Node(
+    #     package='module_6_assignment',
+    #     executable='marker_pub',
+    #     name='marker_pub_node',
+    #     output='screen',
+    # )
 
     rviz_node = Node(
             package='rviz2',
@@ -33,6 +33,6 @@ def generate_launch_description():
     
     return LaunchDescription([ 
         ekf_node,
-        marker_node,
+        # marker_node,
         rviz_node
     ])
