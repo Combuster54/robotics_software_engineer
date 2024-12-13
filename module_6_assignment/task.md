@@ -26,6 +26,12 @@ colcon build && source install/setup.bash
 ros2 launch module_6_assignment ekf_tb3_imu_gps.launch.py
 ```
 
+Run marker publisher
+
+```sh
+$ ros2 run module_6_assignment marker_pub
+```
+
 4. **Experiment with Different Q and R Values:**
 
 First set of Q R
